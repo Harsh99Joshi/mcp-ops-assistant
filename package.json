@@ -1,12 +1,16 @@
-name: mcp-ops-assistant
-private: true
-packageManager: pnpm@11.20.0
-engines:
-  node: ">=22"
-scripts:
-  lint: "pnpm -r lint"
-  typecheck: "pnpm -r typecheck"
-  test: "pnpm -r test"
-  build: "pnpm -r build"
-  format: "prettier --write ."
-  clean: "pnpm -r clean"
+{
+  "name": "mcp-ops-assistant",
+  "private": true,
+  "packageManager": "pnpm@11.20.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck",
+    "test": "pnpm -r test",
+    "build": "pnpm -r build",
+    "format": "prettier --write .",
+    "clean": "pnpm -r clean"
+  }
+}
