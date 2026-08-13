@@ -1,28 +1,25 @@
-# Tools (v1)
+# Tools
 
-## get_service_status
-
-- **Type:** read
-- **Approval:** not required
-- **Purpose:** Return current status for one service.
-- **Input:** `{ "serviceName": string }`
-- **Output:** `{ serviceName, status, version, lastDeployment, checkedAt }`
-- **Errors:** `SERVICE_NOT_FOUND`, `INVALID_SERVICE_NAME`, `STATUS_PROVIDER_UNAVAILABLE`
-
-## search_logs
+## query_database
 
 - **Type:** read
-- **Approval:** not required
-- **Purpose:** Search recent logs for a service.
-- **Input:** `{ serviceName, query, limit (1–100), startTime?, endTime? }`
-- **Output:** `{ serviceName, query, count, entries[] }`
-- **Errors:** `SERVICE_NOT_FOUND`, `INVALID_TIME_RANGE`, `LOG_PROVIDER_UNAVAILABLE`, `QUERY_TOO_LONG`
+- **Purpose:** Run a read-only SQL query against allowlisted tables.
+- **Input:** `{ "sql": string, "limit"?: number }`
+- **Output:** `{ columns: string[], rows: Record<string, unknown>[], rowCount: number }`
+- **Errors:** `INVALID_SQL`, `FORBIDDEN_STATEMENT`, `TABLE_NOT_ALLOWED`, `DATABASE_UNAVAILABLE`, `QUERY_TOO_BROAD`
 
-## create_incident
+## search_documents
 
-- **Type:** write
-- **Approval:** required (CLI confirmation in v1)
-- **Purpose:** Create an incident record (mock store in v1).
-- **Input:** `{ serviceName, severity, summary, details? }`
-- **Output:** `{ incidentId, status: "created", createdAt }`
-- **Errors:** `SERVICE_NOT_FOUND`, `INVALID_SEVERITY`, `DUPLICATE_INCIDENT`, `DATABASE_UNAVAILABLE`
+- **Type:** read
+- **Purpose:** Full-text search over the `documents` table (runbooks, notes).
+- **Input:** `{ "query": string, "limit"?: number }`
+- **Output:** `{ query: string, count: number, results: { id, title, snippet, category, rank }[] }`
+- **Errors:** `QUERY_TOO_SHORT`, `DATABASE_UNAVAILABLE`
+
+## get_system_info
+
+- **Type:** read
+- **Purpose:** Return service inventory health plus live process metrics for the MCP host.
+- **Input:** `{ "serviceName"?: string }`
+- **Output:** `{ checkedAt, host: { uptimeSeconds, memoryMb, nodeVersion }, services: [...] }`
+- **Errors:** `SERVICE_NOT_FOUND`, `DATABASE_UNAVAILABLE`

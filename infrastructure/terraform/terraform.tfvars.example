@@ -1,0 +1,4 @@
+aws_region        = "us-east-1"
+project_name      = "mcp-ops"
+ecr_repository    = "mcp-ops-server"
+db_instance_class = "db.t4g.micro"

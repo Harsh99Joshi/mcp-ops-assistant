@@ -10,7 +10,18 @@
     "typecheck": "pnpm -r typecheck",
     "test": "pnpm -r test",
     "build": "pnpm -r build",
+    "dev:server": "pnpm --filter @mcp-ops/mcp-server dev",
+    "dev:client": "pnpm --filter @mcp-ops/mcp-client dev",
     "format": "prettier --write .",
-    "clean": "pnpm -r clean"
+    "clean": "pnpm -r clean",
+    "docker:up": "docker compose -f infrastructure/docker/docker-compose.yml up --build",
+    "docker:down": "docker compose -f infrastructure/docker/docker-compose.yml down",
+    "seed": "node scripts/seed-db.mjs"
+  },
+  "devDependencies": {
+    "prettier": "^3.5.3"
+  },
+  "dependencies": {
+    "pg": "^8.23.0"
   }
 }

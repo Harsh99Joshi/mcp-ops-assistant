@@ -1,103 +1,59 @@
-# Project Scope — MCP Ops Assistant (v1)
+# Project Scope — MCP Ops Assistant
 
 ## One-paragraph description
 
-Build and deploy a remote Model Context Protocol (MCP) server in TypeScript that exposes a small set of operations tools, plus a separate TypeScript MCP client (CLI first) that discovers and invokes those tools over HTTP. The focus is deployment engineering: validated tool contracts, service-to-service authentication, Docker packaging, and a public HTTPS deployment. Mock/fixture data backs the tools in v1; a full LLM chat UI is out of scope until the remote MCP path works.
+Build and deploy a remote Model Context Protocol (MCP) platform in TypeScript: an HTTP MCP server exposing modular DevOps tools, plus an AI CLI client that discovers those tools and executes them via an LLM tool loop. Tools cover database querying, document retrieval, and system operations, backed by PostgreSQL, packaged with Docker, and deployed to AWS ECS with GitHub Actions, Secrets Manager, CloudWatch, and health checks.
 
-## Version 1 focus
+## In scope
 
-| In scope | Out of scope (later) |
-|----------|----------------------|
-| MCP server (Streamable HTTP) | Next.js chat UI / LLM tool loop |
-| MCP CLI client | OAuth, RBAC, Kubernetes |
-| 3 tools with Zod schemas | Terraform / AWS ECS |
-| Mock fixture data | Full observability stack |
-| Docker for the server | Redis, vector DB, multi-agent |
-| Remote HTTPS deploy | Complex multi-agent routing |
-| Shared-secret auth (client ↔ server) | Production monitoring integrations |
+| Area | Detail |
+|------|--------|
+| MCP server | Streamable HTTP at `/mcp`, shared-secret auth, `/health` |
+| AI client | CLI: list tools, call tools, Anthropic tool-calling loop |
+| Tools | `query_database`, `search_documents`, `get_system_info` |
+| Data | PostgreSQL (seeded services + documents) |
+| Containers | Docker multi-stage image + local docker-compose |
+| CI/CD | GitHub Actions: typecheck, test, build, push ECR, deploy ECS |
+| AWS | ECS Fargate, ALB, RDS Postgres, Secrets Manager, CloudWatch |
 
-## First three tools
+## Out of scope
 
-| Tool | Type | Approval | Purpose |
-|------|------|----------|---------|
-| `get_service_status` | Read | No | Return status for one named service |
-| `search_logs` | Read | No | Search recent log lines for a service |
-| `create_incident` | Write | Yes (CLI confirm) | Create an incident record (in-memory/mock in v1) |
+Next.js chat UI, OAuth/RBAC, Kubernetes, Redis/vector DB, multi-agent routing, multi-AZ HA.
 
-## Data source (v1)
+## Definition of done
 
-Mock JSON fixtures in memory / local files. No PostgreSQL required for v1.
+- [x] Separate TypeScript MCP server and AI CLI client
+- [x] Three Zod-validated tools backed by PostgreSQL
+- [x] Server speaks MCP over HTTP with shared-secret auth
+- [x] Docker image + compose (server + Postgres)
+- [x] GitHub Actions CI/CD to AWS ECS
+- [x] Secrets Manager, CloudWatch logs, ALB/ECS health checks
+- [x] README + DEMO runbooks
 
-## Minimum client (v1)
-
-CLI that can:
-
-- List tools from the remote MCP server
-- Call each of the three tools
-- Require explicit confirmation before `create_incident`
-- Read `MCP_SERVER_URL` and auth secret from environment
-- Show structured success/error output
-
-## First deployment target
-
-Pick one managed container platform for v1 (decide in Phase 9):
-
-- Railway, Render, or Fly.io (recommended first)
-- MCP server at `https://<host>/mcp`
-- Client runs locally (or second service later) against that URL
-
-## Database entities (v1)
-
-None required. Optional later: `incidents`, `tool_executions`.
-
-## Definition of “version 1 complete”
-
-- [ ] MCP server and MCP CLI client are separate TypeScript apps
-- [ ] Tools use Zod-validated inputs and structured outputs
-- [ ] Server speaks MCP over HTTP (not stdio-only)
-- [ ] CLI lists tools and calls all three successfully locally
-- [ ] Write tool (`create_incident`) requires explicit confirmation
-- [ ] Server Docker image builds and runs
-- [ ] Server deployed remotely with HTTPS
-- [ ] CLI can call the remote server (no localhost in production config)
-- [ ] Shared secret required between client and server
-- [ ] Health endpoint exists
-- [ ] Basic CI: install, typecheck, test, Docker build
-- [ ] README documents setup, env vars, and demo commands
-
-## Stack decisions (locked for v1)
+## Stack
 
 | Decision | Choice |
 |----------|--------|
 | Language | TypeScript (strict) |
 | Runtime | Node.js 22 LTS |
-| Package manager | pnpm (workspace monorepo) |
-| MCP SDK | Official TypeScript MCP SDK |
+| Package manager | pnpm workspace |
+| MCP SDK | `@modelcontextprotocol/sdk` |
 | Validation | Zod |
 | Logging | Pino |
 | Testing | Vitest |
+| DB | PostgreSQL + `pg` |
+| LLM | Anthropic Claude |
 | Containers | Docker |
-| ORM / DB | Deferred past v1 |
-| Web/AI UI | Deferred past v1 |
-| Hosting | Decide at first remote deploy |
+| IaC | Terraform |
+| Hosting | AWS ECS Fargate |
 
-## Repo layout (target)
+## Repo layout
 
 ```
-mcp-ops-assistant/
-├── apps/
-│   ├── mcp-server/
-│   └── mcp-client/          # CLI
-├── packages/
-│   └── shared/              # tool schemas, errors
-├── infrastructure/docker/
-├── roadmap/
-├── PROJECT_SCOPE.md
-├── package.json
-├── pnpm-workspace.yaml
-└── README.md
+apps/mcp-server/
+apps/mcp-client/
+packages/shared/
+infrastructure/docker/
+infrastructure/terraform/
+.github/workflows/
 ```
-
-## Current phase
-
-**Phase 0 — Define project scope** (this document).
