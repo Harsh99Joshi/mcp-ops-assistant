@@ -19,6 +19,7 @@
     "seed": "node scripts/seed-db.mjs"
   },
   "devDependencies": {
+    "pnpm": "11.20.0",
     "prettier": "^3.5.3"
   },
   "dependencies": {

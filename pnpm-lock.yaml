@@ -12,6 +12,9 @@ importers:
         specifier: ^8.23.0
         version: 8.23.0
     devDependencies:
+      pnpm:
+        specifier: 11.20.0
+        version: 11.20.0
       prettier:
         specifier: ^3.5.3
         version: 3.9.6
@@ -1078,6 +1081,11 @@ packages:
   pkce-challenge@5.0.1:
     resolution: {integrity: sha512-wQ0b/W4Fr01qtpHlqSqspcj3EhBvimsdh0KlHhH8HRZnMsEa0ea2fTULOXOS9ccQr3om+GcGRk4e+isrZWV8qQ==}
     engines: {node: '>=16.20.0'}
+
+  pnpm@11.20.0:
+    resolution: {integrity: sha512-mm8zCpW2ZEbqCI+vFSFAWooB8H/ecSTMmVjf7VLUu0NnN+ZbCPhfN7Rvy6N1CSVYrFEmK4FoRLIvY0Bu0Wa/7g==}
+    engines: {node: '>=22.13'}
+    hasBin: true
 
   postcss@8.5.26:
     resolution: {integrity: sha512-u82N74LFzG8ca+dD8puPnplTXoGH4fTPpVGuIbt36G3qvNlkvfD0lEAZSxaly3KX8TS/L1A1gsCEmvKmBcVbkQ==}
@@ -2315,6 +2323,8 @@ snapshots:
       thread-stream: 3.2.0
 
   pkce-challenge@5.0.1: {}
+
+  pnpm@11.20.0: {}
 
   postcss@8.5.26:
     dependencies:

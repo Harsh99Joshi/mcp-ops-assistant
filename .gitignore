@@ -46,3 +46,18 @@ infrastructure/terraform/.terraform.lock.hcl
 
 # IDE
 *.swp
+
+# Interview / planning docs (local only — not part of the shipped codebase)
+DEMO.md
+PROJECT_SCOPE.md
+ARCHITECTURE.md
+TOOLS.md
+roadmap/
+
+# Local dev bootstrap (Windows helpers — optional on your machine)
+requirements.txt
+pnpm.cmd
+scripts/setup.ps1
+scripts/setup.cmd
+scripts/activate.ps1
+.node-version
