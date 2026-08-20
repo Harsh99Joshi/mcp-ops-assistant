@@ -12,10 +12,29 @@ function usage(): never {
 Env:
   MCP_SERVER_URL       (default http://localhost:3001/mcp)
   MCP_SERVER_SECRET    shared secret
+  MCP_TOOL_ARGS        JSON args for call-tool (Windows-friendly)
   ANTHROPIC_API_KEY    required for ask
   ANTHROPIC_MODEL      optional model override
+
+Windows PowerShell (pnpm strips JSON quotes):
+  .\\scripts\\call-tool.ps1 search_documents '{"query":"ECS"}'
+  $env:MCP_TOOL_ARGS='{"query":"ECS"}'; pnpm --filter @mcp-ops/mcp-client start call-tool search_documents
 `);
   process.exit(1);
+}
+
+function parseToolArgs(rest: string[]): Record<string, unknown> {
+  const fromEnv = process.env.MCP_TOOL_ARGS?.trim();
+  const inline = rest.length > 1 ? rest.slice(1).join(' ').trim() : '';
+  const argsJson = fromEnv || inline || '{}';
+
+  try {
+    return JSON.parse(argsJson) as Record<string, unknown>;
+  } catch {
+    console.error('Invalid JSON args:', argsJson);
+    console.error('On Windows, use scripts/call-tool.ps1 or set MCP_TOOL_ARGS.');
+    process.exit(1);
+  }
 }
 
 async function main() {
@@ -34,15 +53,8 @@ async function main() {
 
     if (cmd === 'call-tool') {
       const name = rest[0];
-      const argsJson = rest[1] ?? '{}';
       if (!name) usage();
-      let args: Record<string, unknown>;
-      try {
-        args = JSON.parse(argsJson) as Record<string, unknown>;
-      } catch {
-        console.error('Invalid JSON args');
-        process.exit(1);
-      }
+      const args = parseToolArgs(rest);
       const result = await client.callTool({ name, arguments: args });
       console.log(JSON.stringify(result, null, 2));
       return;

@@ -77,9 +77,20 @@ docker compose -f infrastructure/docker/docker-compose.yml up --build -d
 # Verify health + remote MCP tool path (also covered by vitest e2e)
 curl -s http://localhost:3001/health
 pnpm --filter @mcp-ops/mcp-client start list-tools
-pnpm --filter @mcp-ops/mcp-client start call-tool search_documents "{\"query\":\"ECS\"}"
 pnpm --filter @mcp-ops/mcp-client start call-tool get_system_info "{}"
-pnpm --filter @mcp-ops/mcp-client start call-tool query_database "{\"sql\":\"SELECT name, status FROM services\",\"limit\":10}"
+
+# Windows PowerShell:
+#   .\scripts\call-tool.ps1 search_documents '{"query":"ECS"}'
+#
+# Windows CMD (use .cmd — .ps1 opens in Notepad from cmd):
+#   set MCP_TOOL_ARGS={"query":"ECS"}
+#   scripts\call-tool.cmd search_documents
+#   set MCP_TOOL_ARGS={"sql":"SELECT name, status FROM services","limit":10}
+#   scripts\call-tool.cmd query_database
+
+# Bash/macOS:
+pnpm --filter @mcp-ops/mcp-client start call-tool search_documents '{"query":"ECS"}'
+pnpm --filter @mcp-ops/mcp-client start call-tool query_database '{"sql":"SELECT name, status FROM services","limit":10}'
 
 # LLM tool loop (needs ANTHROPIC_API_KEY in .env)
 pnpm --filter @mcp-ops/mcp-client start ask "What documents mention ECS Fargate?"

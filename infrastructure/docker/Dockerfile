@@ -11,9 +11,11 @@ COPY apps/mcp-client/package.json apps/mcp-client/
 RUN pnpm install --frozen-lockfile
 COPY packages/shared packages/shared
 COPY apps/mcp-server apps/mcp-server
-RUN pnpm --filter @mcp-ops/shared build \
- && pnpm --filter @mcp-ops/mcp-server build \
- && pnpm --filter @mcp-ops/mcp-server deploy --prod --legacy /deploy
+RUN pnpm --filter @mcp-ops/mcp-server... build \
+ && pnpm --filter @mcp-ops/mcp-server deploy --prod --legacy /deploy \
+ && rm -rf /deploy/node_modules/@mcp-ops/shared \
+ && mkdir -p /deploy/node_modules/@mcp-ops/shared \
+ && cp -r packages/shared/dist packages/shared/package.json /deploy/node_modules/@mcp-ops/shared/
 
 FROM node:22-bookworm-slim AS runner
 WORKDIR /app

@@ -1,0 +1,30 @@
+# Dependencies (reinstalled inside the image — do not copy host node_modules)
+node_modules
+**/node_modules
+
+# Build output
+dist
+**/dist
+*.tsbuildinfo
+
+# Git / IDE
+.git
+.gitignore
+.idea
+.vscode
+
+# Env / secrets
+.env
+.env.*
+
+# Local / interview docs (not needed in the server image)
+DEMO.md
+PROJECT_SCOPE.md
+ARCHITECTURE.md
+TOOLS.md
+roadmap
+
+# Terraform state
+infrastructure/terraform/.terraform
+infrastructure/terraform/*.tfstate
+infrastructure/terraform/*.tfstate.*
