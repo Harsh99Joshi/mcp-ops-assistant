@@ -26,7 +26,7 @@ export async function queryDatabase(
   const sql = wrapLimit(parsed.data.sql, parsed.data.limit);
   try {
     const result = await db.query(sql);
-    const columns = result.fields.map((f) => f.name);
+    const columns = result.fields.map((f: { name: string }) => f.name);
     const rows = result.rows as Record<string, unknown>[];
     logger.info({ rowCount: rows.length }, 'query_database ok');
     return {

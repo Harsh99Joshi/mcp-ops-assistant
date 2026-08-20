@@ -7,7 +7,7 @@
   },
   "scripts": {
     "lint": "pnpm -r lint",
-    "typecheck": "pnpm -r typecheck",
+    "typecheck": "pnpm --filter @mcp-ops/shared build && pnpm -r typecheck",
     "test": "pnpm -r test",
     "build": "pnpm -r build",
     "dev:server": "pnpm --filter @mcp-ops/mcp-server dev",
